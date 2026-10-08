@@ -232,3 +232,146 @@ main{flex:1}
   .squiggle path{stroke-dashoffset:0}
   html{scroll-behavior:auto}
 }
+
+/* Jobs Portal button (dashboard) */
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0 0 1.25rem}
+.section-head .section-title{margin:0}
+.jobs-btn{position:relative;isolation:isolate;display:inline-block;padding:2px;border-radius:999px;color:#fff;font-weight:700;
+  background:linear-gradient(90deg,#ff2d95,#ff8a00,#ffe600,#2bff88,#00d4ff,#7b2ff7,#ff2d95);background-size:300% 100%;
+  animation:rgbShift 4s linear infinite;transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.jobs-btn::before{content:"";position:absolute;inset:-3px;z-index:-1;border-radius:inherit;background:inherit;background-size:inherit;
+  filter:blur(14px);opacity:.55;animation:inherit;transition:opacity .3s}
+.jobs-btn:hover{transform:translateY(-2px) scale(1.05)}
+.jobs-btn:hover::before{opacity:.95}
+.jobs-btn:active{transform:scale(.97)}
+.jobs-btn-inner{display:flex;align-items:center;gap:.55rem;padding:.6rem 1.25rem;border-radius:999px;background:#0b0f24;position:relative;overflow:hidden}
+.jobs-btn-inner::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;transform:skewX(-20deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:sheen 3.2s ease-in-out infinite}
+.jobs-btn .icon{width:1.1em;height:1.1em}
+@keyframes rgbShift{to{background-position:300% 0}}
+@keyframes sheen{0%,55%{left:-60%}100%{left:130%}}
+@media (prefers-reduced-motion:reduce){.jobs-btn,.jobs-btn-inner::after{animation:none}}
+
+/* Jobs page */
+.jobs{display:flex;flex-wrap:wrap;gap:var(--gap);padding-bottom:4rem}
+.job{--tone:var(--accent);flex:1 1 calc((100% - 2 * var(--gap)) / 3);min-width:0;display:flex;flex-direction:column;gap:.35rem;padding:1.5rem;
+  background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--tone);border-radius:var(--radius);box-shadow:var(--shadow);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s,background-color .45s;
+  animation:rise .6s calc(.1s + var(--i) * 70ms) cubic-bezier(.2,.8,.2,1) both}
+.job:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover)}
+.job-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.6rem;margin-bottom:.6rem}
+.chip{display:inline-block;padding:.25rem .7rem;border-radius:999px;font-size:.8rem;font-weight:700;line-height:1.35;
+  color:var(--tone);background:color-mix(in srgb,var(--tone) 14%,transparent)}
+:root[data-theme="dark"] .chip{color:color-mix(in srgb,var(--tone) 55%,#fff)}
+.status{flex:none;font-size:.8rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.status.soon{color:#d9480f}
+:root[data-theme="dark"] .status.soon{color:#ff9f6b}
+.status.closed{color:#c92a2a}
+:root[data-theme="dark"] .status.closed{color:#ff8787}
+.job.is-closed{opacity:.6}
+.job-title{font-family:var(--font-display);font-size:1.3rem;line-height:1.2;letter-spacing:-.02em;margin:0}
+.job-co{margin:0 0 .8rem;color:var(--muted);font-weight:600}
+.job-info{margin:0 0 1.2rem;display:grid;gap:.5rem}
+.job-info div{display:grid;grid-template-columns:7.2rem 1fr;gap:.6rem;font-size:.95rem}
+.job-info dt{color:var(--muted)}
+.job-info dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.apply-btn{margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:.8rem 1.2rem;border-radius:14px;
+  background:var(--accent);color:var(--accent-ink);font-weight:700;box-shadow:0 10px 22px -10px var(--accent);
+  transition:transform .25s cubic-bezier(.3,1.6,.5,1),box-shadow .3s,filter .3s}
+.apply-btn:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 16px 28px -10px var(--accent)}
+.apply-btn .icon{transition:transform .3s}
+.apply-btn:hover .icon{transform:translate(3px,-3px)}
+@media (max-width:1100px){.job{flex-basis:calc((100% - var(--gap)) / 2)}}
+@media (max-width:640px){.job{flex-basis:100%;padding:1.25rem}.job-info div{grid-template-columns:6.4rem 1fr}.section-head{flex-wrap:wrap}}
+
+/* ── ChatGPT Find Jobs button + modal ── */
+.chatgpt-find-btn{
+  display:inline-flex;align-items:center;gap:.55rem;margin-top:1.15rem;
+  padding:.7rem 1.25rem;border-radius:999px;border:0;cursor:pointer;
+  font:inherit;font-weight:700;font-size:.95rem;
+  background:linear-gradient(135deg,#10a37f 0%,#0d8a6a 100%);
+  color:#fff;box-shadow:0 10px 24px -10px rgba(16,163,127,.55);
+  transition:transform .25s cubic-bezier(.3,1.6,.5,1),box-shadow .3s,filter .25s;
+}
+.chatgpt-find-btn:hover{transform:translateY(-2px);filter:brightness(1.06);box-shadow:0 14px 28px -10px rgba(16,163,127,.65)}
+.chatgpt-find-btn:active{transform:scale(.97)}
+.chatgpt-find-btn .icon{width:1.15em;height:1.15em}
+
+.modal-overlay{
+  position:fixed;inset:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  padding:1.25rem;
+  background:rgba(8,12,28,.55);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  animation:modalFadeIn .28s ease both;
+}
+.modal-overlay[hidden]{display:none!important}
+@keyframes modalFadeIn{from{opacity:0}to{opacity:1}}
+
+.modal-panel{
+  width:min(100%,480px);max-height:min(92vh,640px);overflow:auto;
+  background:var(--surface);border:1px solid var(--line);border-radius:calc(var(--radius) + 4px);
+  box-shadow:0 24px 60px -16px rgba(0,0,0,.45);
+  animation:modalSlide .32s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes modalSlide{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+
+.modal-head{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:1.25rem 1.4rem 1rem;border-bottom:1px solid var(--line);
+}
+.modal-head h2{
+  font-family:var(--font-display);font-size:1.3rem;font-weight:700;
+  letter-spacing:-.02em;margin:0;line-height:1.2;
+}
+.modal-close{
+  width:40px;height:40px;border-radius:50%;border:1px solid var(--line);
+  background:var(--surface-2);color:var(--text);cursor:pointer;
+  display:grid;place-items:center;flex:none;
+  transition:background-color .2s,color .2s,transform .2s;
+}
+.modal-close:hover{background:var(--accent);color:var(--accent-ink);transform:rotate(90deg)}
+.modal-close .icon{width:18px;height:18px}
+
+.chatgpt-form{padding:1.25rem 1.4rem 1.5rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field{display:flex;flex-direction:column;gap:.35rem}
+.field-full{grid-column:1 / -1}
+.field-label{font-size:.88rem;font-weight:700;color:var(--muted)}
+.field input,.field select{
+  width:100%;padding:.7rem .9rem;border-radius:12px;
+  border:1px solid var(--line);background:var(--surface-2);color:var(--text);
+  font:inherit;font-size:.98rem;
+  transition:border-color .2s,box-shadow .2s,background-color .3s;
+}
+.field input:focus,.field select:focus{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent);
+}
+.field input::placeholder{color:color-mix(in srgb,var(--muted) 70%,transparent)}
+.form-note{margin:1.1rem 0 0;font-size:.88rem;color:var(--muted);line-height:1.45}
+.form-actions{
+  display:flex;justify-content:flex-end;gap:.75rem;margin-top:1.25rem;
+}
+.btn-secondary,.btn-primary{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.7rem 1.2rem;border-radius:12px;font:inherit;font-weight:700;
+  cursor:pointer;transition:transform .2s,background-color .2s,color .2s,box-shadow .2s;
+}
+.btn-secondary{
+  border:1px solid var(--line);background:var(--surface-2);color:var(--text);
+}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{
+  border:0;background:linear-gradient(135deg,#10a37f 0%,#0d8a6a 100%);color:#fff;
+  box-shadow:0 8px 20px -8px rgba(16,163,127,.5);
+}
+.btn-primary:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn-primary .icon{width:1.1em;height:1.1em}
+
+@media (max-width:480px){
+  .form-grid{grid-template-columns:1fr}
+  .field-full{grid-column:auto}
+  .form-actions{flex-direction:column-reverse}
+  .btn-secondary,.btn-primary{width:100%}
+}
