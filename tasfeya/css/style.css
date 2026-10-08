@@ -510,3 +510,26 @@ blockquote.arabic.sm{font-size:clamp(1.15rem,2.6vw,1.4rem);padding:.75rem 1rem;m
   .routine-grid{grid-template-columns:1fr}
   .collection-list.numbered-strong li{padding-left:2.8rem}
 }
+
+/* ── Section actions (Job + Accommodation buttons) ── */
+.section-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem}
+
+/* Accommodation button (warm amber gradient) */
+.accom-btn{position:relative;isolation:isolate;display:inline-block;padding:2px;border-radius:999px;color:#fff;font-weight:700;
+  background:linear-gradient(90deg,#ff8a00,#ffe600,#ffb347,#e69a00,#ff8a00);background-size:300% 100%;
+  animation:rgbShift 4s linear infinite;transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.accom-btn::before{content:"";position:absolute;inset:-3px;z-index:-1;border-radius:inherit;background:inherit;background-size:inherit;
+  filter:blur(14px);opacity:.5;animation:inherit;transition:opacity .3s}
+.accom-btn:hover{transform:translateY(-2px) scale(1.05)}
+.accom-btn:hover::before{opacity:.9}
+.accom-btn:active{transform:scale(.97)}
+.accom-btn-inner{display:flex;align-items:center;gap:.55rem;padding:.6rem 1.25rem;border-radius:999px;background:#1a1208;position:relative;overflow:hidden}
+.accom-btn-inner::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;transform:skewX(-20deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:sheen 3.2s ease-in-out infinite}
+.accom-btn .icon{width:1.1em;height:1.1em}
+@media (prefers-reduced-motion:reduce){.accom-btn,.accom-btn-inner::after{animation:none}}
+@media (max-width:640px){
+  .section-actions{width:100%}
+  .jobs-btn,.accom-btn{flex:1 1 auto}
+  .jobs-btn-inner,.accom-btn-inner{justify-content:center}
+}
