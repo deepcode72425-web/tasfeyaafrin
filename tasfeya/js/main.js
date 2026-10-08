@@ -53,6 +53,17 @@
     });
   });
 
+  /* Job deadlines: show days left, dim closed listings */
+  var today=new Date();today.setHours(0,0,0,0);
+  document.querySelectorAll('.job[data-deadline]').forEach(function(card){
+    var p=card.dataset.deadline.split('-'),d=new Date(+p[0],+p[1]-1,+p[2]);
+    var days=Math.round((d-today)/86400000),el=card.querySelector('.status');
+    if(!el)return;
+    if(days<0){el.textContent='Closed';el.classList.add('closed');card.classList.add('is-closed')}
+    else if(days===0){el.textContent='Closes today';el.classList.add('soon')}
+    else{el.textContent='Closes in '+days+(days===1?' day':' days');if(days<=3)el.classList.add('soon')}
+  });
+
   /* Tabs */
   var tabs=[].slice.call(document.querySelectorAll('[role="tab"]'));
   function showTab(id,focus){
@@ -92,4 +103,85 @@
     });
   });
   window.addEventListener('pageshow',function(e){if(e.persisted)document.body.classList.remove('leaving')});
+
+  /* ── ChatGPT job finder modal ── */
+  var modal=document.getElementById('chatgptModal');
+  var openBtn=document.getElementById('openChatgptForm');
+  var closeBtn=document.getElementById('closeChatgptForm');
+  var cancelBtn=document.getElementById('cancelChatgptForm');
+  var form=document.getElementById('chatgptJobForm');
+  var lastFocus=null;
+
+  function openModal(){
+    if(!modal)return;
+    lastFocus=document.activeElement;
+    modal.hidden=false;
+    document.body.style.overflow='hidden';
+    var first=modal.querySelector('input,select,button');
+    if(first)first.focus();
+  }
+  function closeModal(){
+    if(!modal)return;
+    modal.hidden=true;
+    document.body.style.overflow='';
+    if(lastFocus)lastFocus.focus();
+  }
+
+  if(openBtn)openBtn.addEventListener('click',openModal);
+  if(closeBtn)closeBtn.addEventListener('click',closeModal);
+  if(cancelBtn)cancelBtn.addEventListener('click',closeModal);
+
+  if(modal){
+    modal.addEventListener('click',function(e){
+      if(e.target===modal)closeModal();
+    });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&!modal.hidden)closeModal();
+    });
+  }
+
+  if(form){
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      var age=document.getElementById('cgAge').value.trim();
+      var gender=document.getElementById('cgGender').value.trim();
+      var position=document.getElementById('cgPosition').value.trim();
+      var experience=document.getElementById('cgExperience').value.trim();
+      var location=document.getElementById('cgLocation').value.trim();
+      var salary=document.getElementById('cgSalary').value.trim();
+
+      if(!age||!gender||!position||!experience||!location||!salary){
+        form.reportValidity();
+        return;
+      }
+
+      var prompt=
+'Find current job opportunities matching the following candidate preferences:\n'+
+'- Age: '+age+'\n'+
+'- Gender: '+gender+'\n'+
+'- Preferred Position/Job Type: '+position+'\n'+
+'- Years of Work Experience: '+experience+'\n'+
+'- Preferred Job Location(s): '+location+'\n'+
+'- Expected Monthly Salary: '+salary+'\n'+
+'\n'+
+'Search for relevant and currently available jobs, preferably from reliable job portals such as Bdjobs.com and official company career pages.\n'+
+'For each suitable job, provide:\n'+
+'1. Job Title\n'+
+'2. Company Name\n'+
+'3. Location\n'+
+'4. Salary\n'+
+'5. Required Experience\n'+
+'6. Educational Requirements\n'+
+'7. Application Deadline\n'+
+'8. Key Skills/Requirements\n'+
+'9. Direct Application Link\n'+
+'\n'+
+'Prioritize jobs that closely match the candidate\'s age, experience, preferred position, location, and salary expectations. If an exact match is unavailable, include the closest relevant opportunities and clearly explain which requirement differs.\n'+
+'Please provide at least 20 suitable job opportunities if available, ranked from the best match to the least match.';
+
+      var url='https://chatgpt.com/?q='+encodeURIComponent(prompt);
+      window.open(url,'_blank','noopener,noreferrer');
+      closeModal();
+    });
+  }
 })();
